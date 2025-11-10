@@ -49,6 +49,16 @@ if [ -f "$POSTGRES_CONF_FILE" ] && [ ! -f "$SSL_DIR/server.crt" ]; then
   bash "$INIT_SSL_SCRIPT"
 fi
 
+# Run realtime initialization in the background
+# This ensures the realtime publication is always configured
+(
+  # Wait for postgres to be fully started
+  sleep 5
+
+  # Run the realtime initialization script
+  bash /docker-entrypoint-initdb.d/init-realtime.sh || echo "Warning: Realtime initialization failed"
+) &
+
 # unset PGHOST to force psql to use Unix socket path
 # this is specific to Railway and allows
 # us to use PGHOST after the init
