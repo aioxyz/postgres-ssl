@@ -3,6 +3,8 @@
 # exit as soon as any of these commands fail, this prevents starting a database without certificates
 set -e
 
+echo "Generating SSL certificates..."
+
 # Set up needed variables
 SSL_DIR="/var/lib/postgresql/data/certs"
 
