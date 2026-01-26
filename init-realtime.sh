@@ -1,15 +1,10 @@
 #!/bin/bash
 set -e
 
-echo "Waiting for Postgres to be ready..."
-until pg_isready -h "${PGUSER:-postgres}"; do
-  sleep 1
-done
-
 echo "Configuring Postgres for Supabase Realtime..."
 
-# Apply configuration changes
-psql "$DATABASE_URL" <<-EOSQL
+# Use psql without specifying host - it will use Unix socket automatically
+psql -v ON_ERROR_STOP=1 --username "$PGUSER" --dbname "$PGDATABASE" <<-EOSQL
     -- Grant necessary privileges
     GRANT ALL PRIVILEGES ON DATABASE $PGDATABASE TO $PGUSER;
 
@@ -28,4 +23,4 @@ psql "$DATABASE_URL" <<-EOSQL
     SELECT 'Max WAL Senders: ' || setting FROM pg_settings WHERE name = 'max_wal_senders';
 EOSQL
 
-echo "Realtime configuration complete!"
+echo "✓ Realtime configuration complete!"
