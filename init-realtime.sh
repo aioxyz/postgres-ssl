@@ -2,7 +2,7 @@
 set -e
 
 echo "Waiting for Postgres to be ready..."
-until pg_isready -h $PGHOST -p $PGPORT -U $PGUSER; do
+until pg_isready -h "${PGUSER:-postgres}"; do
   sleep 1
 done
 
