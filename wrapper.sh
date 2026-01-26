@@ -26,7 +26,7 @@ fi
 
 # Set up needed variables
 SSL_DIR="/var/lib/postgresql/data/certs"
-INIT_SSL_SCRIPT="/docker-entrypoint-initdb.d/init-ssl.sh"
+INIT_SSL_SCRIPT="/docker-entrypoint-initdb.d/01-init-ssl.sh"
 POSTGRES_CONF_FILE="$PGDATA/postgresql.conf"
 
 if [ -f "$POSTGRES_CONF_FILE" ]; then
