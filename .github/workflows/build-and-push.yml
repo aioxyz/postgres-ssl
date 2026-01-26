@@ -2,11 +2,11 @@ name: Build and Push PostgreSQL Images
 
 on:
   schedule:
-    - cron: "0 0 * * 1"  # Every Monday at midnight UTC
+    - cron: "0 0 * * 1" # Every Monday at midnight UTC
   workflow_dispatch:
 
 env:
-  LATEST_POSTGRES_MAJOR: 16  # Change this to update which version gets tagged as 'latest'
+  LATEST_POSTGRES_MAJOR: 16 # Change this to update which version gets tagged as 'latest'
 
 jobs:
   build-postgres:
@@ -18,7 +18,7 @@ jobs:
 
     strategy:
       matrix:
-        postgres_major: [13, 14, 15, 16, 17]
+        postgres_major: [16]
 
     steps:
       - name: Checkout sources
@@ -30,7 +30,7 @@ jobs:
           # Get the latest minor version for this major version
           MINOR_VERSION=$(./get-postgres-version.sh ${{ matrix.postgres_major }})
           echo "minor_version=${MINOR_VERSION}" >> $GITHUB_OUTPUT
-          
+
           echo "Building PostgreSQL $MINOR_VERSION with tags: ${{ matrix.postgres_major }}, ${MINOR_VERSION}"
 
       - name: Set up QEMU
@@ -60,4 +60,3 @@ jobs:
             ghcr.io/${{ github.repository }}:${{ matrix.postgres_major }}
             ghcr.io/${{ github.repository }}:${{ steps.get_version.outputs.minor_version }}
             ${{ matrix.postgres_major == env.LATEST_POSTGRES_MAJOR && format('ghcr.io/{0}:latest', github.repository) || '' }}
-
