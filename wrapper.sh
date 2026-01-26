@@ -32,7 +32,7 @@ POSTGRES_CONF_FILE="$PGDATA/postgresql.conf"
 # At the very top of your script
 if [ ! -f "$POSTGRES_CONF_FILE" ]; then
   echo "PostgreSQL not initialized yet, will run on next start"
-  exit 0
+  exit 1
 fi
 
 # Regenerate if the certificate is not a x509v3 certificate
