@@ -29,6 +29,12 @@ SSL_DIR="/var/lib/postgresql/data/certs"
 INIT_SSL_SCRIPT="/docker-entrypoint-initdb.d/init-ssl.sh"
 POSTGRES_CONF_FILE="$PGDATA/postgresql.conf"
 
+# At the very top of your script
+if [ ! -f "$POSTGRES_CONF_FILE" ]; then
+  echo "PostgreSQL not initialized yet, will run on next start"
+  exit 0
+fi
+
 # Regenerate if the certificate is not a x509v3 certificate
 if [ -f "$SSL_DIR/server.crt" ] && ! openssl x509 -noout -text -in "$SSL_DIR/server.crt" | grep -q "DNS:localhost"; then
   echo "Did not find a x509v3 certificate, regenerating certificates..."
